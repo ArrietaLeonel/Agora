@@ -1,4 +1,9 @@
 ﻿@page "/login"
+
+@inject FirebaseAuthService _firebaseAuthService
+@inject IJSRuntime jsRuntime
+@inject SweetAlertService swal2
+
 @if (!isAuthenticated)
 {
     <div class="card text-center">
@@ -58,7 +63,19 @@ else
 
     private async Task Loguear()
     {
-
+        var user = await _firebaseAuthService.SignInWithEmailPassword(email, password);
+        if (user != null)
+        {
+            isAuthenticated = true;
+            StateHasChanged();
+        }
+        else
+        {
+            // Manejar error de autenticación
+            isAuthenticated = false;
+            await swal2.FireAsync("Error de autenticación.","Por favor, verifique sus credenciales.",SweetAlertIcon.Question);
+            StateHasChanged();
+		}
     }
 
     private async Task Desloguear()
