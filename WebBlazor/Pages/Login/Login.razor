@@ -2,7 +2,6 @@
 
 @inject FirebaseAuthService _firebaseAuthService
 @inject IJSRuntime jsRuntime
-@inject SweetAlertService swal2
 
 @if (!isAuthenticated)
 {
@@ -11,7 +10,7 @@
             Iniciar sesión
         </div>
         <div class="card-body">
-            <h3 class="card-title">Bienvenido a Ágora - Capacitaciones</h3>
+            <h3 class="card-title">Bienvenido Serena</h3>
             <div class="container">
                 <div class="row mb-3">
                     <div class="col-md-12 d-flex justify-content-center align-items-center">
@@ -47,7 +46,7 @@ else
             Cerrar sesión
         </div>
         <div class="card-body">
-            <p class="card-header">Cerrar sesión de Ágora</p>
+            <p class="card-header">Cerrar sesión de Serena</p>
 
             <button class="btn btn-primary" @onclick="Desloguear">Cerrar sesión</button>
         </div>

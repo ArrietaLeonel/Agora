@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Service\Service.csproj" />
+    <ProjectReference Include="D:\Proyectos\Serena\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>
