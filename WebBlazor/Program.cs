@@ -1,8 +1,8 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Services.Interfaces;
-using Services.Services;
+using Service.Interfaces;
+using Service.Services;
 using WebBlazor;
 using WebBlazor.Services;
 
