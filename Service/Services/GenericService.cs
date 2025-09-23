@@ -12,7 +12,7 @@ namespace Service.Services
 {
     public class GenericService<T> : IGenericService<T> where T : class
     {
-        private readonly HttpClient _httpClient;
+        HttpClient _httpClient;
         protected readonly JsonSerializerOptions _options;
         protected readonly string _endpoint;
 
@@ -46,7 +46,7 @@ namespace Service.Services
 
         }
 
-        public async Task<List<T>?> GetAllAsync(string? filtro)
+        public async Task<List<T>?> GetAllAsync(string? filtro="")
         {
             var response= await _httpClient.GetAsync(_endpoint);
             var content = await response.Content.ReadAsStringAsync();

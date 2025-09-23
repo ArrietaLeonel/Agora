@@ -1,8 +1,8 @@
 ﻿@page "/login"
 
-@inject SweetAlertService swal2
+@inject SweetAlertService _sweetAlert
 @inject FirebaseAuthService _firebaseAuthService
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime _jsRuntime
 
 @if (!isAuthenticated)
 {
@@ -11,7 +11,7 @@
             Iniciar sesión
         </div>
         <div class="card-body">
-            <h3 class="card-title">Bienvenido Serena</h3>
+            <h3 class="card-title">Bienvenido Ágora</h3>
             <div class="container">
                 <div class="row mb-3">
                     <div class="col-md-12 d-flex justify-content-center align-items-center">
@@ -66,14 +66,18 @@ else
         var user = await _firebaseAuthService.SignInWithEmailPassword(email, password);
         if (user != null)
         {
+            if (user.EmailVerified == false)
+            {
+                await _sweetAlert.FireAsync("Verificación de correo", "Por favor, verifica tu correo electrónico antes de iniciar sesión.", SweetAlertIcon.Warning);
+                return;
+            }
             isAuthenticated = true;
             StateHasChanged();
         }
         else
         {
             // Manejar error de autenticación
-            isAuthenticated = false;
-            await swal2.FireAsync("Error de autenticación.","Por favor, verifique sus credenciales.",SweetAlertIcon.Question);
+            await _sweetAlert.FireAsync("Error de autenticación.", "Por favor, verifique sus credenciales.", SweetAlertIcon.Question);
             StateHasChanged();
 		}
     }
@@ -83,6 +87,7 @@ else
         isAuthenticated = false;
         email = string.Empty;
         password = string.Empty;
+		await _firebaseAuthService.SignOut();
         StateHasChanged();
     }
     private void RegisterMe()

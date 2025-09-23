@@ -34,6 +34,7 @@
             subMenuUsuarios = new FontAwesome.Sharp.IconMenuItem();
             menuSalir = new FontAwesome.Sharp.IconMenuItem();
             subMenuSalirdelsistema = new FontAwesome.Sharp.IconMenuItem();
+            subMenuCapacitaciones = new FontAwesome.Sharp.IconMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -56,7 +57,7 @@
             // 
             // menuPrincipal
             // 
-            menuPrincipal.DropDownItems.AddRange(new ToolStripItem[] { subMenuUsuarios });
+            menuPrincipal.DropDownItems.AddRange(new ToolStripItem[] { subMenuUsuarios, subMenuCapacitaciones });
             menuPrincipal.IconChar = FontAwesome.Sharp.IconChar.HomeLg;
             menuPrincipal.IconColor = Color.Black;
             menuPrincipal.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -70,7 +71,7 @@
             subMenuUsuarios.IconColor = Color.Black;
             subMenuUsuarios.IconFont = FontAwesome.Sharp.IconFont.Auto;
             subMenuUsuarios.Name = "subMenuUsuarios";
-            subMenuUsuarios.Size = new Size(119, 22);
+            subMenuUsuarios.Size = new Size(180, 22);
             subMenuUsuarios.Text = "Usuarios";
             subMenuUsuarios.Click += subMenuUsuarios_Click;
             // 
@@ -93,6 +94,16 @@
             subMenuSalirdelsistema.Size = new Size(158, 22);
             subMenuSalirdelsistema.Text = "Salir del sistema";
             subMenuSalirdelsistema.Click += subMenuSalirdelsistema_Click;
+            // 
+            // subMenuCapacitaciones
+            // 
+            subMenuCapacitaciones.IconChar = FontAwesome.Sharp.IconChar.BookBookmark;
+            subMenuCapacitaciones.IconColor = Color.Black;
+            subMenuCapacitaciones.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            subMenuCapacitaciones.Name = "subMenuCapacitaciones";
+            subMenuCapacitaciones.Size = new Size(180, 22);
+            subMenuCapacitaciones.Text = "Capacitaciones";
+            subMenuCapacitaciones.Click += subMenuCapacitaciones_Click;
             // 
             // MenuPrincipalView
             // 
@@ -120,5 +131,6 @@
         private FontAwesome.Sharp.IconMenuItem menuSalir;
         private FontAwesome.Sharp.IconMenuItem subMenuSalirdelsistema;
         private FontAwesome.Sharp.IconMenuItem subMenuUsuarios;
+        private FontAwesome.Sharp.IconMenuItem subMenuCapacitaciones;
     }
 }
