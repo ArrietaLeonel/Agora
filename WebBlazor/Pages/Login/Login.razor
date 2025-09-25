@@ -1,0 +1,98 @@
+﻿@page "/login"
+
+@inject SweetAlertService _sweetAlert
+@inject FirebaseAuthService _firebaseAuthService
+@inject IJSRuntime _jsRuntime
+
+@if (!isAuthenticated)
+{
+    <div class="card text-center">
+        <div class="card-header">
+            Iniciar sesión
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">Bienvenido Ágora</h3>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <label class="form-label me-2">Correo electrónico:</label>
+                        <InputText class="form-control w-50" @bind-Value="email" placeholder="Escribase aquí" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <label class="form-label me-2">Contraseña:</label>
+                        <InputText class="form-control w-50" @bind-Value="password" placeholder="Escribase aquí" type="password" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-center">
+                        <button class="btn btn-primary" @onclick="Loguear">Acceder</button>
+                    </div>
+                    <div class="col-md-12 d-flex justify-content-center">
+                        <button class="btn btn-secondary" @onclick="RegisterMe">Registrarme</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-body-secondary">
+        Desarrollo 2do año - TSDS - 2025
+    </div>
+}
+else
+{
+    <div class="card text-center">
+        <div class="card-header">
+            Cerrar sesión
+        </div>
+        <div class="card-body">
+            <p class="card-header">Cerrar sesión de Serena</p>
+
+            <button class="btn btn-primary" @onclick="Desloguear">Cerrar sesión</button>
+        </div>
+        <div class="card-footer text-body-secondary">
+            Desarrollo 2do año - TSDS - 2025
+        </div>
+    </div>
+}
+@code {
+    bool isAuthenticated = false;
+    string email = string.Empty;
+    string password = string.Empty;
+
+    private async Task Loguear()
+    {
+        var user = await _firebaseAuthService.SignInWithEmailPassword(email, password);
+        if (user != null)
+        {
+            if (user.EmailVerified == false)
+            {
+                await _sweetAlert.FireAsync("Verificación de correo", "Por favor, verifica tu correo electrónico antes de iniciar sesión.", SweetAlertIcon.Warning);
+                return;
+            }
+            isAuthenticated = true;
+            StateHasChanged();
+        }
+        else
+        {
+            // Manejar error de autenticación
+            await _sweetAlert.FireAsync("Error de autenticación.", "Por favor, verifique sus credenciales.", SweetAlertIcon.Question);
+            StateHasChanged();
+		}
+    }
+
+    private async Task Desloguear()
+    {
+        isAuthenticated = false;
+        email = string.Empty;
+        password = string.Empty;
+		await _firebaseAuthService.SignOut();
+        StateHasChanged();
+    }
+    private void RegisterMe()
+    {
+        
+    }
+
+}
