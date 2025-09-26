@@ -3,6 +3,7 @@
 @inject SweetAlertService _sweetAlert
 @inject FirebaseAuthService _firebaseAuthService
 @inject IJSRuntime _jsRuntime
+@inject NavigationManager _navManager
 
 @if (!isAuthenticated)
 {
@@ -60,7 +61,10 @@ else
     bool isAuthenticated = false;
     string email = string.Empty;
     string password = string.Empty;
-
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await _firebaseAuthService.IsUserAuthenticated();
+    }
     private async Task Loguear()
     {
         var user = await _firebaseAuthService.SignInWithEmailPassword(email, password);
@@ -79,7 +83,7 @@ else
             // Manejar error de autenticación
             await _sweetAlert.FireAsync("Error de autenticación.", "Por favor, verifique sus credenciales.", SweetAlertIcon.Question);
             StateHasChanged();
-		}
+        }
     }
 
     private async Task Desloguear()
@@ -87,12 +91,12 @@ else
         isAuthenticated = false;
         email = string.Empty;
         password = string.Empty;
-		await _firebaseAuthService.SignOut();
+        await _firebaseAuthService.SignOut();
         StateHasChanged();
     }
     private void RegisterMe()
     {
-        
+        _navManager.NavigateTo("/register");
     }
 
 }
