@@ -1,8 +1,8 @@
 namespace MovilApp.ContentViews;
 
-public partial class NewContent1 : ContentView
+public partial class FlyoutHeaders : ContentView
 {
-	public NewContent1()
+	public FlyoutHeaders()
 	{
 		InitializeComponent();
 	}
