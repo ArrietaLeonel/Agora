@@ -1,0 +1,175 @@
+@startuml
+
+title Ágora - Flujo Web de Acreditación de Capacitaciones
+
+skinparam dpi 180
+skinparam activity {
+  BackgroundColor white
+  BorderColor #555
+  ArrowColor #555
+}
+skinparam partitionBorderColor #888
+skinparam shadowing false
+skinparam TitleFontSize 18
+
+start
+
+partition "WebApp (Frontend)" {
+  :Cargar Home del sitio;
+}
+
+partition "Firebase Auth" {
+  :Detectar estado de autenticación;
+  if (¿Hay sesión abierta?) then (Sí)
+    :Obtener usuario Firebase (email, uid);
+  else (No)
+    :Usuario anónimo;
+  endif
+}
+
+partition "Backend Ágora" {
+  if (¿Usuario Firebase disponible?) then (Sí)
+    :Buscar usuario por email;
+    if (¿Existe usuario en Ágora?) then (Sí)
+      :Contexto de usuario listo;
+    else (No)
+      :Marcar "requiere completar registro";
+    endif
+  else (No)
+    :Sin búsqueda (anónimo);
+  endif
+}
+
+partition "WebApp (Frontend)" {
+  if (¿Requiere completar registro?) then (Sí)
+    :Ir a Pantalla de Registración;
+    -> Registro_Pendiente;
+  else (No)
+    :Mostrar "Capacitaciones vigentes";
+    :Mostrar "Histórico (orden cronológico)";
+  endif
+}
+
+partition "Usuario" {
+  :Selecciona una Card (vigente o histórica);
+}
+
+partition "WebApp (Frontend)" {
+  :Abrir Page de Detalle de la capacitación;
+  if (¿Inscripción abierta?) then (Sí)
+    :Mostrar botón "Inscribirse";
+  else (No)
+    :Ocultar botón "Inscribirse";
+    stop
+  endif
+}
+
+partition "Usuario" {
+  if (¿Hace clic en Inscribirse?) then (Sí)
+    :Intentar inscribirse;
+  else (No)
+    :Solo consulta el detalle;
+    stop
+  endif
+}
+
+partition "Firebase Auth" {
+  if (¿Está logueado?) then (Sí)
+    -> Confirmar_Inscripcion;
+  else (No)
+    -> Pantalla_Login;
+  endif
+}
+
+partition "WebApp (Frontend)" {
+  label Pantalla_Login
+  :Pantalla de Login
+  (Email/Password | Recordar contraseña | Google OAuth2 | Registrarse);
+
+  if (¿Elige 'Recordar contraseña'?) then (Sí)
+    :Persistir sesión en este navegador;
+  else (No)
+    :Sesión no persistente;
+  endif
+}
+
+partition "Firebase Auth" {
+  if (¿Login Email/Password?) then (Sí)
+    :Autenticar credenciales;
+  else (No)
+    if (¿Login con Google OAuth2?) then (Sí)
+      :Flujo OAuth2 con Google;
+      :Crear/obtener cuenta en Firebase;
+    else (No)
+      if (¿Ir a Registrarse?) then (Sí)
+        -> Registro_Pendiente;
+      else (No)
+        :Cancelar y volver al Detalle;
+        stop
+      endif
+    endif
+  endif
+}
+
+partition "WebApp (Frontend)" {
+  if (¿Email verificado?) then (Sí)
+    :Continuar;
+  else (No)
+    :Avisar "Debes verificar tu email";
+    :Ofrecer reenviar verificación;
+    :Esperar verificación y reintentar;
+  endif
+}
+
+partition "Backend Ágora" {
+  :Buscar usuario por email;
+  if (¿Existe usuario en Ágora?) then (Sí)
+    :Contexto de usuario listo;
+  else (No)
+    -> Registro_Pendiente;
+  endif
+}
+
+partition "WebApp (Frontend)" {
+  label Registro_Pendiente
+  :Pantalla de Registración (Apellido, Nombre, DNI);
+}
+
+partition "Usuario" {
+  if (¿Confirma/Guarda registración?) then (Sí)
+    :Enviar datos de registración;
+  else (No)
+    :Cancelar registración;
+    stop
+  endif
+}
+
+partition "Backend Ágora" {
+  :Crear usuario en el sistema (vincular a email Firebase);
+}
+
+partition "WebApp (Frontend)" {
+  :Volver al Detalle de la capacitación;
+  label Confirmar_Inscripcion
+  :Dialogo "¿Confirmás tu inscripción?";
+}
+
+partition "Usuario" {
+  if (¿Confirma inscripción?) then (Sí)
+    :Confirmar;
+  else (No)
+    :Cancelar inscripción;
+    stop
+  endif
+}
+
+partition "Backend Ágora" {
+  :Registrar inscripción del usuario en la capacitación;
+}
+
+partition "WebApp (Frontend)" {
+  :Mostrar resultado (éxito / error);
+}
+
+stop
+@enduml

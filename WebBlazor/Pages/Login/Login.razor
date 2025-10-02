@@ -26,6 +26,12 @@
                         <InputText class="form-control w-50" @bind-Value="password" placeholder="Escribase aquí" type="password" />
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <InputCheckbox class="form-check"  @bind-Value="rememberPassword" />
+                        <label class="form-check-label">Recordar Sesión</label>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12 d-flex justify-content-center">
                         <button class="btn btn-primary" @onclick="Loguear">Acceder</button>
@@ -33,6 +39,9 @@
                     <div class="col-md-12 d-flex justify-content-center">
                         <button class="btn btn-secondary" @onclick="RegisterMe">Registrarme</button>
                     </div>
+                </div>
+                <div>
+                    <button class="btn btn-success" @onclick="LoginWithGoogle"></button>
                 </div>
             </div>
         </div>
@@ -58,6 +67,7 @@ else
     </div>
 }
 @code {
+    bool rememberPassword;
     bool isAuthenticated = false;
     string email = string.Empty;
     string password = string.Empty;
@@ -67,7 +77,7 @@ else
     }
     private async Task Loguear()
     {
-        var user = await _firebaseAuthService.SignInWithEmailPassword(email, password);
+        var user = await _firebaseAuthService.SignInWithEmailPassword(email, password, rememberPassword);
         if (user != null)
         {
             if (user.EmailVerified == false)
@@ -86,6 +96,21 @@ else
         }
     }
 
+    private async Task LoginWithGoogle()
+    {
+        var user = await _firebaseAuthService.LoginWithGoogle();
+        if (user != null)
+        {
+            isAuthenticated = true;
+            StateHasChanged();
+            // Aquí podrías redirigir al usuario a otra página si es necesario
+        }
+        else
+        {
+            // Manejar error de autenticación (mostrar mensaje, etc.)
+            await _sweetAlert.FireAsync("Error de autenticación", "No se pudo iniciar sesión con Google.", SweetAlertIcon.Error);
+        }
+    }
     private async Task Desloguear()
     {
         isAuthenticated = false;
