@@ -24,10 +24,10 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build WebBlazor/WebBlazor.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish WebBlazor/WebBlazor.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -51,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9345A624A74F4BCA90A0EB7C029BED24 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C1678F4BE90F47CE88761BE572111FCB }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D2E5560BE77849EEB754C060664F544B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B0BFBF1B28034F499730509E7DB5BF26 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3D3A7BCFE46740FE89E54F9B23F097F5 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1501D4A579134AEAB4701DDAAC66C613 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -62,4 +62,5 @@ jobs:
           app-name: 'webagoraleo'
           slot-name: 'Production'
           package: .
+
           
